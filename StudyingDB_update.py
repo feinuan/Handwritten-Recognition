@@ -39,3 +39,35 @@ class LearningDB():
         finally:
             self.conn.close()
         return learn_result
+    def __get_data(self, table, test_data):
+        '''
+         取出table表中所有数据
+         并与测试数据进行比较，返回最小值
+         如果table表中无数据，则全部取0
+        '''
+
+        try:
+            if table < 0 or table > 9:
+                raise Exception("错误！table的值不能为%d！" % table)
+            self.conn = pymssql.connect(host='127.0.0.1',
+                                        user='sa',
+                                        password='123456',
+                                        database='PyLearningDB',
+                                        charset='utf8')
+            self.cursor = self.conn.cursor()
+            self.sql='select * from table%d' %table
+            self.cursor.execute(self.sql)
+            receive_sql = self.cursor.fetchall()
+
+            if not receive_sql:
+                new_receive_sql = [(0, 0, 0, 0, 0, 0, 0, 0, 0)]
+            else:
+                new_receive_sql = receive_sql
+        finally:
+            self.conn.close()
+        # 计算最小值
+        dim_data = []
+        for receive_data in new_receive_sql:
+            dim_data.append(self.__distance_data(test_data, receive_data))
+        # 返回dimData中最小值
+        return min(dim_data)
