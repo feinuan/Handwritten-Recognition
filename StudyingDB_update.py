@@ -71,3 +71,13 @@ class LearningDB():
             dim_data.append(self.__distance_data(test_data, receive_data))
         # 返回dimData中最小值
         return min(dim_data)
+
+    def __distance_data(self, test_data, table_data):
+        '''
+         求九维空间中两点之间的距离
+        '''
+
+        self.distance = 0.0
+        for i in range(9):
+            self.distance += (test_data[i] - table_data[i]) ** 2
+        return math.sqrt(self.distance)
