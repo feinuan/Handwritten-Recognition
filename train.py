@@ -33,3 +33,41 @@ def get_trainer(self):
                                  parameters=parameters,
                                  update_equation=optimizer)
     return trainer
+def start_trainer(self):
+    # 获取训练器
+    trainer = self.get_trainer()
+
+    # 定义训练事件
+    def event_handler(event):
+        lists = []
+        if isinstance(event, paddle.event.EndIteration):
+            if event.batch_id % 100 == 0:
+                print ("\nPass %d, Batch %d, Cost %f, %s" %
+                    event.pass_id, event.batch_id, event.cost, event.metrics)
+            else:
+                sys.stdout.write('.')
+                sys.stdout.flush()
+        if isinstance(event, paddle.event.EndPass):
+            # 保存训练好的参数
+            model_path = '../model'
+            if not os.path.exists(model_path):
+                os.makedirs(model_path)
+            with open(model_path + "/model.tar", 'w') as f:
+                trainer.save_parameter_to_tar(f=f)
+
+            result = trainer.test(reader=paddle.batch(paddle.dataset.mnist.test(), batch_size=128))
+            print ("\nTest with Pass %d, Cost %f, %s\n" % event.pass_id, result.cost, result.metrics)
+            lists.append((event.pass_id, result.cost, result.metrics['classification_error_evaluator']))
+
+    # 获取数据
+    reader = paddle.batch(paddle.reader.shuffle(paddle.dataset.mnist.train(), buf_size=20000),
+                          batch_size=128)
+    '''
+    开始训练
+    reader 训练数据
+    num_passes 训练的轮数
+    event_handler 训练的事件,比如在训练的时候要做一些什么事情
+    '''
+    trainer.train(reader=reader,
+                  num_passes=100,
+                  event_handler=event_handler)
