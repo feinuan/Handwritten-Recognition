@@ -40,3 +40,13 @@ tf.app.flags.DEFINE_string(
     '模型保存的名称'
 )
 FLAGS = tf.app.flags.FLAGS
+def main(_):
+    my_model = model(batch_size=FLAGS.batch_size, hidden_size=FLAGS.hidden_size)
+    my_model.train_model(EPOCH=FLAGS.EPOCH, learning_rate=FLAGS.learning_rate,
+                         regular_coef=FLAGS.regular_coef, model_dir=FLAGS.model_dir, model_name=FLAGS.model_name)
+
+
+if __name__ == '__main__':
+    np.random.seed(0)
+    tf.set_random_seed(0)
+    tf.app.run()
