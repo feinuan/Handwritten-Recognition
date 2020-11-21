@@ -24,3 +24,19 @@ tf.app.flags.DEFINE_float(
     1e-4,
     '学习率'
 )
+tf.app.flags.DEFINE_float(
+    'regular_coef',
+    5e-4,
+    '正则项系数'
+)
+tf.app.flags.DEFINE_string(
+    'model_dir',
+    'F:\HandWrinting\ms-master\model',
+    '模型保存的目录'
+)
+tf.app.flags.DEFINE_string(
+    'model_name',
+    'model',
+    '模型保存的名称'
+)
+FLAGS = tf.app.flags.FLAGS
