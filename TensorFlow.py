@@ -14,4 +14,9 @@ def bias_variable(shape):
 #strides代表卷积模板移动的步长，全是1代表走过所有的值
 #padding设为SAME意思是保持输入输出的大小一样，使用全0补充
 def conv2d(x,W):
-    return tf.nn.conv2d(x,W,str
+    return tf.nn.conv2d(x,W,strides=[1,1,1,1],padding='SAME')
+
+#ksize [1, height, width, 1] 第一个和最后一个代表对batches和channel做池化，1代表不池化
+#strides [1, stride,stride, 1]意思是步长为2，我们使用的最大池化
+def max_pool_2x2(x):
+    return tf.nn.max_pool(x,ksize=[1,2,2,1], strides=[1,2,2,1],padding='SAME')
