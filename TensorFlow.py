@@ -10,3 +10,8 @@ def weight_variable(shape):
 def bias_variable(shape):
     initial = tf.constant(0.1, shape=shape)
     return tf.Variable(initial)
+#二维卷积函数
+#strides代表卷积模板移动的步长，全是1代表走过所有的值
+#padding设为SAME意思是保持输入输出的大小一样，使用全0补充
+def conv2d(x,W):
+    return tf.nn.conv2d(x,W,str
